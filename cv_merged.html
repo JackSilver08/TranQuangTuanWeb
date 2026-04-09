@@ -754,52 +754,360 @@ body {
 
 
 /* ============================================
-   PRINT STYLES
+   PRINT PAGE SETUP
    ============================================ */
+@page {
+    size: A4 portrait;
+    margin: 0;
+}
+
 @media print {
+    :root {
+        --print-page-width: 210mm;
+        --print-page-height: 297mm;
+        --print-sidebar-width: 70mm;
+        --print-main-width: 140mm;
+        --print-base-size: 9pt;
+        --print-body-line-height: 1.35;
+    }
+
+    html,
     body {
-        background: white;
-        padding: 0;
-        min-height: auto;
+        width: var(--print-page-width);
+        height: var(--print-page-height);
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: #fff !important;
     }
 
-    .cv-container {
-        box-shadow: none;
-        border-radius: 0;
-        max-width: 100%;
-    }
-
-    .sidebar {
-        padding: 1.5rem 1.2rem;
+    body {
+        display: block;
+        min-height: 0;
+        font-size: var(--print-base-size);
+        line-height: var(--print-body-line-height);
+        color: var(--main-text);
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 
-    .main-content {
-        padding: 1.5rem 2rem;
+    /* Freeze interactive effects so the printed page stays deterministic. */
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        box-shadow: none !important;
     }
 
-    .project-card:hover,
-    .education-item:hover,
-    .skill-tag:hover,
-    .tech-badge:hover,
-    .contact-list li:hover,
-    .soft-skills-list li:hover,
-    .awards-list li:hover {
-        transform: none;
+    .cv-container {
+        width: var(--print-page-width) !important;
+        min-width: var(--print-page-width);
+        max-width: var(--print-page-width) !important;
+        height: var(--print-page-height) !important;
+        min-height: var(--print-page-height);
+        margin: 0 !important;
+        border-radius: 0;
+        overflow: hidden;
         box-shadow: none;
+        break-after: avoid-page;
+        page-break-after: avoid;
+    }
+
+    /* Override Bootstrap's responsive grid so print keeps the two-column layout on A4. */
+    .cv-container > .row {
+        display: grid !important;
+        grid-template-columns: var(--print-sidebar-width) var(--print-main-width);
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        gap: 0;
+    }
+
+    .sidebar,
+    .main-content {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0;
+        min-height: 0;
+        flex: none !important;
+    }
+
+    .sidebar {
+        padding: 10mm 6mm 8mm;
+        background: var(--sidebar-bg) !important;
+    }
+
+    .main-content {
+        padding: 10mm 9mm 8mm;
+        background: #fff !important;
     }
 
     .photo-border {
         animation: none;
+        top: -1.2mm;
+        left: -1.2mm;
+        right: -1.2mm;
+        bottom: -1.2mm;
+        border-width: 0.35mm;
+    }
+
+    .profile-photo-wrapper {
+        margin-bottom: 4mm;
+    }
+
+    .profile-photo {
+        width: 30mm;
+        height: 30mm;
+    }
+
+    .avatar-fallback {
+        font-size: 18pt;
+        letter-spacing: 0.8pt;
+    }
+
+    .sidebar-section {
+        margin-bottom: 4.2mm;
+        padding-bottom: 4.2mm;
+    }
+
+    .sidebar-title {
+        font-size: 9pt;
+        letter-spacing: 0.8pt;
+        margin-bottom: 2.5mm;
+        gap: 1.6mm;
+    }
+
+    .sidebar-title i {
+        font-size: 9.5pt;
+    }
+
+    .contact-list li,
+    .soft-skills-list li {
+        gap: 2mm;
+        padding: 1.2mm 0;
+        font-size: 8pt;
+    }
+
+    .contact-list li i,
+    .awards-list li i {
+        width: 4mm;
+        font-size: 8pt;
+        margin-top: 0.3mm;
+    }
+
+    .contact-list li a {
+        color: var(--sidebar-text) !important;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .skill-group {
+        margin-bottom: 2.5mm;
+    }
+
+    .skill-group-title {
+        font-size: 7.2pt;
+        margin-bottom: 1.2mm;
+    }
+
+    .skill-tags,
+    .tech-stack {
+        gap: 1.2mm;
+    }
+
+    .skill-tag,
+    .tech-badge {
+        font-size: 6.9pt;
+        padding: 0.8mm 1.8mm;
+        border-radius: 999px;
+    }
+
+    .language-item {
+        padding: 1.2mm 0;
+    }
+
+    .lang-name {
+        font-size: 8pt;
+    }
+
+    .lang-level {
+        max-width: 52%;
+        font-size: 7pt;
+    }
+
+    .awards-list li {
+        gap: 2mm;
+        padding: 1.4mm 0;
+    }
+
+    .awards-list li strong {
+        font-size: 7.8pt;
+    }
+
+    .awards-list li span {
+        font-size: 7pt;
+    }
+
+    .cv-header {
+        margin-bottom: 4.5mm;
     }
 
     .full-name {
-        font-size: 2rem;
+        font-size: 23pt;
+        margin-bottom: 1mm;
+        letter-spacing: -0.4pt;
+    }
+
+    .job-title {
+        font-size: 11pt;
+        margin-bottom: 2.3mm;
+    }
+
+    .header-divider {
+        width: 24mm;
+        height: 1mm;
+    }
+
+    .cv-section {
+        margin-bottom: 4.5mm;
+    }
+
+    .cv-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 10.5pt;
+        margin-bottom: 2.2mm;
+        padding-bottom: 1.6mm;
+        gap: 1.8mm;
+    }
+
+    .section-title::after {
+        width: 13mm;
+    }
+
+    .section-title i {
+        font-size: 10pt;
+    }
+
+    .summary-text,
+    .education-item,
+    .project-card {
+        border-radius: 2mm;
+    }
+
+    .summary-text {
+        font-size: 8.8pt;
+        line-height: 1.45;
+        padding: 3mm 3.4mm;
+        border-left-width: 1mm;
+    }
+
+    .education-item {
+        padding: 3mm 3.4mm;
+    }
+
+    .edu-header {
+        gap: 2mm;
+        margin-bottom: 1.4mm;
+    }
+
+    .edu-school {
+        font-size: 9pt;
+    }
+
+    .edu-major {
+        font-size: 8pt;
+    }
+
+    .edu-year {
+        font-size: 7.4pt;
+        padding: 0.8mm 2mm;
+    }
+
+    .edu-detail {
+        font-size: 7.8pt;
+        line-height: 1.35;
     }
 
     .project-card {
+        padding: 3.2mm 3.5mm;
+        margin-bottom: 3mm;
+    }
+
+    .project-card::before {
+        width: 1mm;
+        opacity: 1;
+    }
+
+    .project-header {
+        margin-bottom: 1.8mm;
+    }
+
+    .project-name {
+        font-size: 9.2pt;
+        line-height: 1.25;
+        margin-bottom: 0.8mm;
+    }
+
+    .project-meta {
+        gap: 1.6mm;
+    }
+
+    .project-role {
+        font-size: 7.7pt;
+        gap: 1mm;
+    }
+
+    .project-role i {
+        font-size: 7.8pt;
+    }
+
+    .tech-stack {
+        margin-bottom: 2.2mm;
+    }
+
+    .project-details {
+        margin-bottom: 2mm;
+    }
+
+    .project-details li {
+        font-size: 7.9pt;
+        line-height: 1.35;
+        padding: 0.7mm 0 0.7mm 4mm;
+    }
+
+    .project-details li::before {
+        top: 1.55mm;
+        width: 1.2mm;
+        height: 1.2mm;
+    }
+
+    .project-links {
+        gap: 1.8mm;
+        padding-top: 2mm;
+    }
+
+    .project-link {
+        font-size: 7.2pt;
+        padding: 0.9mm 2mm;
+        gap: 1mm;
+        color: var(--accent) !important;
+    }
+
+    .project-link i {
+        font-size: 7.4pt;
+    }
+
+    .sidebar-section,
+    .cv-section,
+    .education-item,
+    .project-card,
+    .project-links {
         break-inside: avoid;
+        page-break-inside: avoid;
     }
 }
 
